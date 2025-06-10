@@ -1,0 +1,169 @@
+[tool.poetry]
+name = "philosophical-rag-mcp"
+version = "0.1.0"
+description = "RAG MCP Server for Philosophical Research - AI-powered platform for scholarly analysis"
+authors = ["Philosophical Research Team"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# MCP Framework
+fastapi = "^0.110.0"
+uvicorn = {extras = ["standard"], version = "^0.27.0"}
+mcp = "^0.1.0"
+
+# Database & Vector Storage
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.0"}
+asyncpg = "^0.29.0"
+pgvector = "^0.2.5"
+alembic = "^1.13.0"
+
+# AI & Embeddings
+google-cloud-aiplatform = "^1.44.0"
+vertexai = "^1.38.0"
+
+# Caching & Performance
+redis = {extras = ["hiredis"], version = "^5.0.0"}
+aioredis = "^2.0.1"
+
+# HTTP Client
+httpx = "^0.26.0"
+aiohttp = "^3.9.0"
+
+# Data Processing & NLP
+pydantic = "^2.6.0"
+pypdf = "^4.0.0"
+python-multipart = "^0.0.6"
+spacy = "^3.7.0"
+nltk = "^3.8.0"
+
+# Citation Management
+pyzotero = "^1.5.0"
+
+# Scientific Computing
+numpy = "^1.26.0"
+scipy = "^1.12.0"
+networkx = "^3.2.0"
+
+# Configuration & Environment
+python-dotenv = "^1.0.0"
+pydantic-settings = "^2.1.0"
+
+# Logging & Monitoring
+structlog = "^23.2.0"
+prometheus-client = "^0.19.0"
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^7.4.0"
+pytest-asyncio = "^0.23.0"
+pytest-cov = "^4.1.0"
+pytest-benchmark = "^4.0.0"
+pytest-mock = "^3.12.0"
+httpx = "^0.26.0"  # For testing HTTP endpoints
+
+# Code Quality
+black = "^23.12.0"
+isort = "^5.13.0"
+flake8 = "^7.0.0"
+mypy = "^1.8.0"
+pre-commit = "^3.6.0"
+
+# Development Tools
+ipython = "^8.18.0"
+jupyter = "^1.0.0"
+
+[tool.poetry.group.docker.dependencies]
+# Docker-specific dependencies
+gunicorn = "^21.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pgvector.*",
+    "pyzotero.*",
+    "mcp.*",
+    "spacy.*",
+    "nltk.*"
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "philosophical: marks tests as philosophical research domain tests",
+    "mcp: marks tests as MCP protocol tests",
+    "performance: marks tests as performance benchmarks"
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/migrations/*"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
