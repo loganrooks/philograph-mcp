@@ -1,9 +1,81 @@
-# CLAUDE.md
+# 🎯 CURRENT TASK: Initialize Philosophical Research RAG MCP Server Development System
+- **PLAN:** Complete Claude Code Development System Bootstrap following docs/CLAUDE_CODE_SYSTEM_BOOTSTRAP.md
+- **STATUS:** Phase 1 - File Structure Setup and Template Implementation
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+---
 
-## Project Overview
+## 🧠 CORE DIRECTIVES (VERIFY ON EVERY ACTION)
 
+1. **SPARC-V-L³ Protocol:** You MUST follow the full SPARC-V-L³ cycle for all non-trivial changes as detailed in `docs/DEVELOPMENT_GUIDE.md`.
+2. **pytest + MCP Protocol Testing is Non-Negotiable:** All MCP tools, resources, and prompts must have comprehensive test coverage including integration tests with Claude Code and philosophical research workflows.
+3. **MCP Server + Hybrid Search Architecture Compliance:** Follow PostgreSQL + pgvector hybrid architecture with proper separation between MCP interface, search engine, document processing, and analysis components.
+4. **Verification is Mandatory:** Before any database schema changes, embedding model updates, or MCP protocol modifications, run full test suite (`poetry run pytest`) and verify backward compatibility.
+5. **Log All Anomalies:** Any deviation from the plan, unexpected error, or user correction MUST be logged with structured detail in `FEEDBACK_LOG.md`.
+6. **Log Your Actions:** At the end of every response, you MUST append a structured entry to `ACTIVITY_LOG.md`.
+7. **Self-Critique:** After completing a significant task, you MUST perform a self-analysis and log it in `SELF_ANALYSIS_LOG.md`.
+
+---
+
+## 🔄 CONTEXT INITIALIZATION PROTOCOL (CRITICAL)
+
+**MANDATORY:** Execute this protocol at the start of EVERY conversation and whenever context may have been compacted/refreshed.
+
+### Context Refresh Detection Triggers:
+- Beginning of any new conversation
+- When you cannot recall recent task details or decisions
+- When foundational documents are not in working memory
+- When switching between MCP server development and philosophical research features
+- When database schema or embedding model changes are discussed
+
+### IMMEDIATE INITIALIZATION SEQUENCE:
+1. **ALWAYS READ FIRST:** 
+   - `docs/DEVELOPMENT_GUIDE.md` - Core principles, patterns, and methodologies
+   - `docs/ARCHITECTURE.md` - System design and component relationships  
+   - `PROJECT_STATUS.md` - Current project state and progress
+   - `FEEDBACK_LOG.md` - Recent lessons and workflow decisions
+
+2. **VERIFY UNDERSTANDING:**
+   - MCP Server + Hybrid Search Architecture requirements
+   - pytest + MCP Protocol Testing methodology
+   - SPARC-V-L³ protocol compliance
+   - Philosophical research domain requirements and citation standards
+
+3. **LOAD PROJECT CONTEXT:**
+   - Current task status and priorities
+   - Recent architectural decisions and patterns
+   - Active issues and their resolution approaches
+
+**NEVER SKIP THIS PROTOCOL** - Inconsistent decisions result from missing foundational context.
+
+---
+
+## 📚 KNOWLEDGE BASE INTERACTION PROTOCOL
+
+You are required to read the following documents at specific trigger points:
+
+- **WHEN:** Starting *any* new task.
+  - **READ:** `docs/DEVELOPMENT_GUIDE.md` to refresh core principles.
+  - **READ:** `docs/ARCHITECTURE.md` to understand the system context.
+  - **READ:** `PROJECT_STATUS.md` to understand the current state.
+
+- **WHEN:** Implementing MCP tools, resources, or prompts.
+  - **READ:** `docs/phil-rag-implementation.md` for technical specifications.
+
+- **WHEN:** Working on philosophical research features (search, genealogy, citations).
+  - **READ:** `docs/phil-rag-user-stories.md` and `docs/phil-rag-executive-summary.md`.
+
+- **WHEN:** A significant architectural decision is needed.
+  - **ACTION:** Propose a new Architecture Decision Record (ADR) in `docs/decisions/`.
+
+- **WHEN:** A task is complete.
+  - **ACTION:** Update `CHANGELOG.md`, `PROJECT_STATUS.md`, and `SELF_ANALYSIS_LOG.md`.
+  - **ACTION:** If systemic lesson learned, update `DEVELOPMENT_GUIDE.md`.
+
+---
+
+## 🛠️ PHILOSOPHICAL RESEARCH RAG MCP SERVER SPECIFIC GUIDELINES
+
+### Project Overview
 This is the Philosophical Research RAG MCP Server project - an advanced research infrastructure designed to revolutionize how philosophical scholars interact with texts, conduct genealogical analyses, and manage complex citation networks using AI technologies.
 
 ## High-Level Architecture
