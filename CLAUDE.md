@@ -199,3 +199,17 @@ Key philosophical use cases include:
 - Citation network analysis for influence studies
 - Cross-cultural philosophical comparisons
 - Collaborative annotation and knowledge building
+
+---
+
+## 📝 IMPORTANT INSTRUCTION REMINDERS
+
+- **Never commit changes unless explicitly asked by user**
+- **Always run linting and type checking (`poetry run flake8 src/` and `poetry run mypy src/`) before claiming completion**
+- **Philosophical research requires rigorous citation accuracy - verify all bibliographic information**
+- **MCP server must be stateless and handle concurrent philosophical researchers**
+- **Vector embeddings must preserve philosophical meaning and context**
+- **Search results must maintain academic relevance and authority**
+- **Follow academic standards for all citation formats and attributions**
+- **Respect philosophical text structures (arguments, sections, concepts) in all processing**
+- **Maintain backward compatibility when updating MCP protocol or database schema**
