@@ -11,8 +11,7 @@ import logging
 import os
 from typing import Any, Dict, List
 
-from mcp.server import Server
-from mcp.server.stdio import stdio_server
+from mcp.server import FastMCP
 from mcp.types import Tool, Resource, Prompt
 
 from ..infrastructure.database.connection import init_database
@@ -41,7 +40,7 @@ class PhilosophicalRAGServer:
     """
     
     def __init__(self):
-        self.server = Server("philosophical-rag-mcp")
+        self.server = FastMCP("philosophical-rag-mcp")
         self._initialized = False
         
     async def initialize(self) -> None:
@@ -135,8 +134,7 @@ class PhilosophicalRAGServer:
         
         try:
             # Run server with stdio transport for Claude Code integration
-            async with stdio_server() as (read_stream, write_stream):
-                await self.server.run(read_stream, write_stream)
+            await self.server.run_stdio_async()
         except Exception as e:
             logger.error(f"Server error: {e}")
             raise

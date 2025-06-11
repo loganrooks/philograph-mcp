@@ -17,7 +17,7 @@ class TestPhilosophicalRAGServerUnit:
     
     def test_server_initialization_state(self):
         """Test server initial state."""
-        with patch('src.mcp_server.server.Server') as mock_server_class:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             mock_server_class.return_value = Mock()
             
             server = PhilosophicalRAGServer()
@@ -29,7 +29,7 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_server_initialize_database_setup(self):
         """Test server database initialization."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class, \
              patch('src.mcp_server.server.init_database') as mock_init_db:
             
             mock_server_class.return_value = Mock()
@@ -50,7 +50,7 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_server_initialize_environment_variable(self):
         """Test server reads database URL from environment."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class, \
              patch('src.mcp_server.server.init_database') as mock_init_db, \
              patch.dict(os.environ, {'DATABASE_URL': 'postgresql://env:test@localhost:5432/env_db'}):
             
@@ -70,7 +70,7 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_server_initialize_idempotent(self):
         """Test server initialization is idempotent."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class, \
              patch('src.mcp_server.server.init_database') as mock_init_db:
             
             mock_server_class.return_value = Mock()
@@ -94,7 +94,7 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_server_initialization_error_handling(self):
         """Test server handles initialization errors."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class, \
              patch('src.mcp_server.server.init_database') as mock_init_db:
             
             mock_server_class.return_value = Mock()
@@ -110,7 +110,7 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_register_tools_method_calls(self):
         """Test tool registration method calls."""
-        with patch('src.mcp_server.server.Server') as mock_server_class:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             mock_server = Mock()
             mock_server_class.return_value = mock_server
             
@@ -143,7 +143,7 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_register_resources_method_calls(self):
         """Test resource registration method calls."""
-        with patch('src.mcp_server.server.Server') as mock_server_class:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             mock_server = Mock()
             mock_server_class.return_value = mock_server
             
@@ -169,7 +169,7 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_register_prompts_method_calls(self):
         """Test prompt registration method calls."""
-        with patch('src.mcp_server.server.Server') as mock_server_class:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             mock_server = Mock()
             mock_server_class.return_value = mock_server
             
@@ -192,16 +192,13 @@ class TestPhilosophicalRAGServerUnit:
     @pytest.mark.asyncio
     async def test_server_run_initialization_check(self):
         """Test server run() initializes if needed."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
-             patch('src.mcp_server.server.stdio_server') as mock_stdio:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             
             mock_server = Mock()
-            mock_server.run = AsyncMock()
+            mock_server.run_stdio_async = AsyncMock()
             mock_server_class.return_value = mock_server
             
-            # Mock stdio_server context manager
-            mock_stdio.return_value.__aenter__ = AsyncMock(return_value=("read_stream", "write_stream"))
-            mock_stdio.return_value.__aexit__ = AsyncMock(return_value=None)
+            # Server is already mocked above
             
             server = PhilosophicalRAGServer()
             server.initialize = AsyncMock()
@@ -211,20 +208,16 @@ class TestPhilosophicalRAGServerUnit:
             # Should have called initialize
             server.initialize.assert_called_once()
             # Should have run the server
-            mock_server.run.assert_called_once_with("read_stream", "write_stream")
+            mock_server.run_stdio_async.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_server_run_skips_init_if_initialized(self):
         """Test server run() skips initialization if already done."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
-             patch('src.mcp_server.server.stdio_server') as mock_stdio:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             
             mock_server = Mock()
-            mock_server.run = AsyncMock()
+            mock_server.run_stdio_async = AsyncMock()
             mock_server_class.return_value = mock_server
-            
-            mock_stdio.return_value.__aenter__ = AsyncMock(return_value=("read_stream", "write_stream"))
-            mock_stdio.return_value.__aexit__ = AsyncMock(return_value=None)
             
             server = PhilosophicalRAGServer()
             server._initialized = True  # Mark as already initialized
@@ -235,20 +228,16 @@ class TestPhilosophicalRAGServerUnit:
             # Should NOT have called initialize
             server.initialize.assert_not_called()
             # Should still run the server
-            mock_server.run.assert_called_once()
+            mock_server.run_stdio_async.assert_called_once()
     
     @pytest.mark.asyncio
     async def test_server_run_error_handling(self):
         """Test server run() error handling."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
-             patch('src.mcp_server.server.stdio_server') as mock_stdio:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             
             mock_server = Mock()
-            mock_server.run = AsyncMock(side_effect=Exception("MCP protocol error"))
+            mock_server.run_stdio_async = AsyncMock(side_effect=Exception("MCP protocol error"))
             mock_server_class.return_value = mock_server
-            
-            mock_stdio.return_value.__aenter__ = AsyncMock(return_value=("read_stream", "write_stream"))
-            mock_stdio.return_value.__aexit__ = AsyncMock(return_value=None)
             
             server = PhilosophicalRAGServer()
             server.initialize = AsyncMock()
@@ -263,7 +252,7 @@ class TestMCPServerIntegrationLogic:
     @pytest.mark.asyncio
     async def test_complete_initialization_workflow(self):
         """Test complete server initialization workflow."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class, \
              patch('src.mcp_server.server.init_database') as mock_init_db:
             
             mock_server = Mock()
@@ -293,7 +282,7 @@ class TestMCPServerIntegrationLogic:
     
     def test_philosophical_research_server_name(self):
         """Test server is properly named for philosophical research.""" 
-        with patch('src.mcp_server.server.Server') as mock_server_class:
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class:
             mock_server_class.return_value = Mock()
             
             server = PhilosophicalRAGServer()
@@ -304,7 +293,7 @@ class TestMCPServerIntegrationLogic:
     @pytest.mark.asyncio
     async def test_philosophical_research_capabilities_registration(self):
         """Test philosophical research capabilities are registered."""
-        with patch('src.mcp_server.server.Server') as mock_server_class, \
+        with patch('src.mcp_server.server.FastMCP') as mock_server_class, \
              patch('src.mcp_server.server.init_database'):
             
             mock_server = Mock()

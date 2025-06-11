@@ -2,6 +2,7 @@
 # Extracted from pyproject.toml for pip installation
 
 # MCP Framework - Note: May need to install from git if not on PyPI
+mcp>=1.0.0
 fastapi>=0.110.0
 uvicorn[standard]>=0.27.0
 
