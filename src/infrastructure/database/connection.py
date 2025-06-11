@@ -149,6 +149,7 @@ db_manager = DatabaseManager()
 
 
 # Convenience functions for common operations
+@asynccontextmanager
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     """
     Convenience function to get database session.
